@@ -34,12 +34,14 @@ let handle;
 let imgHandle;
 let timerCount;
 let answerPick = false;
+let score;
 
-let $trueBtn = $("<button>true</button>").addClass("btn btn-primary true-false");
-let $falseBtn = $("<button>false</button>").addClass("btn btn-primary true-false");
+let $trueBtn = $("<button>true</button>").addClass("btn true-false");
+let $falseBtn = $("<button>false</button>").addClass("btn true-false");
 
 let $correct = $("<p>").addClass("correctAnswers");
 let $wrong = $("<p>").addClass("wrongAnswers");
+let $score = $("<p>").addClass("score");
 // let $img1 = $("<img src='./assets/images/bravo.gif'>").addClass("goodJob");
 // let $img2 = $("<img src='./assets/images/yousuck.gif'>").addClass("youSuck");
 
@@ -88,7 +90,7 @@ function getNextQuestion() {
 function timer() {
 
     countdown--;
-    $( "#timer" ).html( countdown );
+    $( "#timer" ).html( `Time left : ${ countdown }` );
     
     if ( countdown === 0 ) {
         
@@ -166,18 +168,18 @@ $(document).on("click", ".true-false" , function(event) {
     // $(this).data('clicked', true);
     
     if ( this.textContent === questions[questionIndex].a ) {
-        parseInt(correctGuess += 1);
+        parseInt( correctGuess += 1 );
         console.log( "you got: " + correctGuess + "right" );
         countdown = 10;
         clearTimeout( timerCount );
-        setTimeout( getNextQuestion, 3000 );
+        setTimeout( getNextQuestion, 500 );
         // displayImage();
     } else {
         parseInt( wrongGuess += 1 );
         console.log( "you got: " + wrongGuess + "wrong" );
         countdown = 10;
         clearTimeout( timerCount );
-        setTimeout( getNextQuestion, 3000 );
+        setTimeout( getNextQuestion, 500 );
         // displayImage();
     }
     questionIndex++;
@@ -189,6 +191,32 @@ $(document).on("click", ".true-false" , function(event) {
 
         $("#quizQuestion").html( $correct ).html( `Correct : ${parseInt( correctGuess )}` );
         $("#quizQuestion").append( $wrong ).append( `Incorrect : ${parseInt( wrongGuess )}` );
+        
+        if ( correctGuess === 0 ) {
+
+            $("#quizQuestion").append( $score ).append( `Score : 0%` );
+            
+        } else if ( correctGuess === 1 ) {
+
+            $("#quizQuestion").append( $score ).append( `Score : 20%` );
+
+        } else if ( correctGuess === 2 ) {
+
+            $("#quizQuestion").append( $score ).append( `Score : 40%` );
+
+        } else if ( correctGuess === 3 ) {
+
+            $("#quizQuestion").append( $score ).append( `Score : 60%` );
+
+        } else if ( correctGuess === 4 ) {
+
+            $("#quizQuestion").append( $score ).append( `Score : 80%` );
+
+        } else {
+
+            $("#quizQuestion").append( $score ).append( `Score : 100%` );
+
+        }
 
     }
     
