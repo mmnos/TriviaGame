@@ -31,42 +31,83 @@ let questionIndex = 0;
 let handle;
 let imgHandle;
 let timerCount;
+let answerPick = true;
+
 let trueBtn = $("<button> True </button>").addClass("btn btn-primary true");
 let falseBtn = $("<button> False </button>").addClass("btn btn-primary false");
 
 function getNextQuestion() {
 
+    answerPick = true;
+    
     if ( handle ) {
 
-        clearTimeout(handle);
-
+        clearTimeout( handle );
+        
     }
-  
-    handle = setTimeout(getNextQuestion, 10000);
     
-    $("#quizQuestion").html(questions[questionIndex].q);
-    $("#quizQuestion").append(trueBtn);
-    $("#quizQuestion").append(falseBtn);
-
+    handle = setTimeout( getNextQuestion, 10000 );
+    
+    $("#quizQuestion").html( questions[questionIndex].q );
+    $("#quizQuestion").append( trueBtn );
+    $("#quizQuestion").append( falseBtn );
+    
     questionIndex++;
     // timerCount = setTimeout(timer, 1000);
     timer();
     
 }
 
-function displayImage() {
+function correct() {
 
-    if ( imghandle ) {
+    if ( answerPick ) {
 
-        clearTimeout(imghandle);
+        if ( questions[0, 1, 4] ) {
 
-    }
-  
-    imghandle = setTimeout(getNextQuestion, 3000);
-
-    // append image here
+            console.log("You're correct!");
+            
+        } else if ( questions[2, 3] ) {
+            
+            console.log("You're wrong!");
+            
+        }
+        answerPick = false;
+}
 
 }
+
+function wrong() {
+
+    if ( answerPick ) {
+
+        if ( questions[2, 3] ) {
+
+            console.log("You're correct!");
+            
+        } else if ( questions[0, 1, 4] ) {
+            
+            console.log("You're wrong!");
+            
+        }
+        answerPick = false;
+
+}
+
+}
+
+// function displayImage() {
+
+//     if ( imghandle ) {
+
+//         clearTimeout( imghandle );
+
+//     }
+  
+//     imghandle = setTimeout( getNextQuestion, 3000 );
+
+//     let image = $("<img>");
+
+// }
 
 function timer() {
 
@@ -74,24 +115,40 @@ function timer() {
     $("#timer").html(countdown);
     
     if ( countdown === 0 ) {
-        // clearInterval(timerCount);
-        getNextQuestion();
+        
         countdown = 10;
+        getNextQuestion();
+
     }
 
     if ( timerCount ) {
 
-        clearTimeout(timerCount);
+        clearTimeout( timerCount );
 
     }
   
-    timerCount = setTimeout(timer, 1000);
+    timerCount = setTimeout( timer, 1000 );
 
 }
 
-function start() {
-    
-}
+// function timer() {
+
+//   countdown--;
+//   $("#timer").text(`Time Left: ${countdown}`);
+
+//   if (countdown === 0) {
+
+//       getNextQuestion();
+//     clearTimeout( handle );
+//     return false;
+
+//   }
+//   else {
+
+//     setTimeout(timer, 1000)
+
+//   }
+// }
 
 function reset() {
 
@@ -105,12 +162,15 @@ $(document).on("click", "#startBtn" , function(event) {
 
 $(document).on("click", ".true" , function(event) {
     
-    displayImage();
+    correct();
+    wrong();
+    // displayImage();
     
 });
 
 $(document).on("click", ".false" , function(event) {
     
-    displayImage();
+    wrong();
+    correct();
     
 });
