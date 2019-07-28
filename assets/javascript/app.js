@@ -26,8 +26,8 @@ let questions = [
     }
 ];
 
-let correctGuess;
-let wrongGuess;
+let correctGuess = 0;
+let wrongGuess = 0;
 let countdown = 10;
 let questionIndex = 0;
 let handle;
@@ -35,8 +35,13 @@ let imgHandle;
 let timerCount;
 let answerPick = false;
 
-let trueBtn = $("<button>true</button>").addClass("btn btn-primary true-false");
-let falseBtn = $("<button>false</button>").addClass("btn btn-primary true-false");
+let $trueBtn = $("<button>true</button>").addClass("btn btn-primary true-false");
+let $falseBtn = $("<button>false</button>").addClass("btn btn-primary true-false");
+
+let $correct = $("<p>").addClass("correctAnswers");
+let $wrong = $("<p>").addClass("wrongAnswers");
+// let $img1 = $("<img src='./assets/images/bravo.gif'>").addClass("goodJob");
+// let $img2 = $("<img src='./assets/images/yousuck.gif'>").addClass("youSuck");
 
 function getNextQuestion() {
 
@@ -50,11 +55,10 @@ function getNextQuestion() {
     
     handle = setTimeout( getNextQuestion, 10000 );
     
-    $("#quizQuestion").html( questions[questionIndex].q );
-    $("#quizQuestion").append( trueBtn );
-    $("#quizQuestion").append( falseBtn );
-    
-    
+    $( "#quizQuestion" ).html( questions[questionIndex].q );
+    $( "#quizQuestion" ).append( $trueBtn );
+    $( "#quizQuestion" ).append( $falseBtn );
+
     // if ( questionIndex > 4 ) {
         //     console.log("stop");
         //     clearTimeout( handle );
@@ -64,47 +68,6 @@ function getNextQuestion() {
     timer();
         
 }
-
-// function trueButton() {
-
-//     if ( answerPick ) {
-
-//         if ( questions[0, 1, 4] ) {
-
-//             console.log("You're correct!");
-            
-//         } 
-//         // else if ( questionIndex === 2 || questionIndex === 3 ) {
-            
-//         //     console.log("You're wrong!");
-            
-//         // }
-//         else console.log("YOur wrong");
-//         answerPick = false;
-// }
-
-// }
-
-// function falseButton() {
-
-//     if ( answerPick ) {
-
-//         if ( questions[2, 3] ) {
-
-//             console.log("You're correct!");
-            
-//         } 
-//         // else if ( questionIndex === 0 || questionIndex === 1 || questionIndex === 4 ) {
-            
-//         //     console.log("You're wrong!");
-            
-//         // }
-//         else console.log("YOur wrong");
-//         answerPick = false;
-
-// }
-
-// }
 
 // function displayImage() {
 
@@ -116,18 +79,21 @@ function getNextQuestion() {
   
 //     imghandle = setTimeout( getNextQuestion, 3000 );
 
-//     let image = $("<img>");
+//     $("#quizQuestion").append($img1);
+
+
 
 // }
 
 function timer() {
 
     countdown--;
-    $("#timer").html(countdown);
+    $( "#timer" ).html( countdown );
     
     if ( countdown === 0 ) {
         
-        wrongGuess++;
+        parseInt( wrongGuess += 1 );
+        console.log("you ran out of time, you got: " + wrongGuess + "wrong");
         questionIndex++;
         countdown = 10;
         getNextQuestion();
@@ -165,11 +131,33 @@ function timer() {
 
 function reset() {
 
+    countdown = 10;
+    questionIndex = 0;
+    correctGuess = 0;
+    wrongGuess = 0;
+
 }
+
+// if ( questionIndex > 4 ) {
+//     $("#startBtn").show();
+//     clearTimeout( timerCount );
+// }
+
+// $("#resetBtn").hide();
 
 $(document).on("click", "#startBtn" , function(event) {
     
     getNextQuestion();
+    $("#startBtn").hide();
+    // $("#startBtn").show();
+    
+});
+
+$(document).on("click", "#resetBtn" , function(event) {
+    
+    reset();
+    getNextQuestion();
+    // $("#startBtn").hide();
     
 });
 
@@ -178,31 +166,30 @@ $(document).on("click", ".true-false" , function(event) {
     // $(this).data('clicked', true);
     
     if ( this.textContent === questions[questionIndex].a ) {
-        console.log("right");
-        correctGuess++;
+        parseInt(correctGuess += 1);
+        console.log( "you got: " + correctGuess + "right" );
         countdown = 10;
         clearTimeout( timerCount );
         setTimeout( getNextQuestion, 3000 );
+        // displayImage();
     } else {
-        console.log("wrong");
-        wrongGuess++;
+        parseInt( wrongGuess += 1 );
+        console.log( "you got: " + wrongGuess + "wrong" );
         countdown = 10;
         clearTimeout( timerCount );
         setTimeout( getNextQuestion, 3000 );
+        // displayImage();
     }
     questionIndex++;
-    console.log(questionIndex);
+    // console.log(questionIndex);
+
+    if ( questionIndex > 4 ) {
+
+        clearTimeout( timerCount );
+
+        $("#quizQuestion").html( $correct ).html( `Correct : ${parseInt( correctGuess )}` );
+        $("#quizQuestion").append( $wrong ).append( `Incorrect : ${parseInt( wrongGuess )}` );
+
+    }
     
 });
-
-// $(document).on("click", ".false" , function(event) {
-    
-//     // trueButton();
-//     // falseButton();
-//     if ( $(".false").text() === questions[questionIndex].a ) {
-//         console.log("right");
-//     } else {
-//         console.log("wrong");
-//     }
-    
-// });
