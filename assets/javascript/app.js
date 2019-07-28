@@ -4,37 +4,39 @@
 let questions = [
     {
         q : "Fortune cookies were invented in the United States : ",
-        a : true
+        a : "true"
     },
     {
         q : "Donkey's kill more people than planes : ",
-        a : true
-    },
-    {
-        q : "Michael is the most common name in the world : ", 
-        a : false
-        // correct answer is Muhammad
-    },
-    {
-        q : "The average person spends 1 year of their life on the toilet : ",
-        a : false
-        // correct answer is 3 years
+        a : "true"
     },
     {
         q : "Chimpanzees hold the world record of having the quickest sexual intercourse, ~ 3 seconds : ",
-        a : true
+        a : "true"
+    },
+    {
+        q : "The average person spends 1 year of their life on the toilet : ",
+        a : "false"
+        // correct answer is 3 years
+    },
+    {
+        q : "Michael is the most common name in the world : ", 
+        a : "false"
+        // correct answer is Muhammad
     }
 ];
 
+let correctGuess;
+let wrongGuess;
 let countdown = 10;
 let questionIndex = 0;
 let handle;
 let imgHandle;
 let timerCount;
-let answerPick = true;
+let answerPick = false;
 
-let trueBtn = $("<button> True </button>").addClass("btn btn-primary true");
-let falseBtn = $("<button> False </button>").addClass("btn btn-primary false");
+let trueBtn = $("<button>true</button>").addClass("btn btn-primary true-false");
+let falseBtn = $("<button>false</button>").addClass("btn btn-primary true-false");
 
 function getNextQuestion() {
 
@@ -52,48 +54,57 @@ function getNextQuestion() {
     $("#quizQuestion").append( trueBtn );
     $("#quizQuestion").append( falseBtn );
     
-    questionIndex++;
-    // timerCount = setTimeout(timer, 1000);
-    timer();
     
+    // if ( questionIndex > 4 ) {
+        //     console.log("stop");
+        //     clearTimeout( handle );
+        // }
+        
+        // timerCount = setTimeout(timer, 1000);
+    timer();
+        
 }
 
-function correct() {
+// function trueButton() {
 
-    if ( answerPick ) {
+//     if ( answerPick ) {
 
-        if ( questions[0, 1, 4] ) {
+//         if ( questions[0, 1, 4] ) {
 
-            console.log("You're correct!");
+//             console.log("You're correct!");
             
-        } else if ( questions[2, 3] ) {
+//         } 
+//         // else if ( questionIndex === 2 || questionIndex === 3 ) {
             
-            console.log("You're wrong!");
+//         //     console.log("You're wrong!");
             
-        }
-        answerPick = false;
-}
+//         // }
+//         else console.log("YOur wrong");
+//         answerPick = false;
+// }
 
-}
+// }
 
-function wrong() {
+// function falseButton() {
 
-    if ( answerPick ) {
+//     if ( answerPick ) {
 
-        if ( questions[2, 3] ) {
+//         if ( questions[2, 3] ) {
 
-            console.log("You're correct!");
+//             console.log("You're correct!");
             
-        } else if ( questions[0, 1, 4] ) {
+//         } 
+//         // else if ( questionIndex === 0 || questionIndex === 1 || questionIndex === 4 ) {
             
-            console.log("You're wrong!");
+//         //     console.log("You're wrong!");
             
-        }
-        answerPick = false;
+//         // }
+//         else console.log("YOur wrong");
+//         answerPick = false;
 
-}
+// }
 
-}
+// }
 
 // function displayImage() {
 
@@ -116,6 +127,8 @@ function timer() {
     
     if ( countdown === 0 ) {
         
+        wrongGuess++;
+        questionIndex++;
         countdown = 10;
         getNextQuestion();
 
@@ -160,17 +173,36 @@ $(document).on("click", "#startBtn" , function(event) {
     
 });
 
-$(document).on("click", ".true" , function(event) {
+$(document).on("click", ".true-false" , function(event) {
+
+    // $(this).data('clicked', true);
     
-    correct();
-    wrong();
-    // displayImage();
+    if ( this.textContent === questions[questionIndex].a ) {
+        console.log("right");
+        correctGuess++;
+        countdown = 10;
+        clearTimeout( timerCount );
+        setTimeout( getNextQuestion, 3000 );
+    } else {
+        console.log("wrong");
+        wrongGuess++;
+        countdown = 10;
+        clearTimeout( timerCount );
+        setTimeout( getNextQuestion, 3000 );
+    }
+    questionIndex++;
+    console.log(questionIndex);
     
 });
 
-$(document).on("click", ".false" , function(event) {
+// $(document).on("click", ".false" , function(event) {
     
-    wrong();
-    correct();
+//     // trueButton();
+//     // falseButton();
+//     if ( $(".false").text() === questions[questionIndex].a ) {
+//         console.log("right");
+//     } else {
+//         console.log("wrong");
+//     }
     
-});
+// });
