@@ -19,7 +19,6 @@ hr {
 
 .mainContent {
     background: white;
-    /* height: 300px; */
 }
 
 .btn-design {
@@ -41,4 +40,8 @@ hr {
     background: #34c6eb;
     padding: 5px;
     margin: 5px;
+}
+
+#quizQuestion {
+    font-size: 1.2em;
 }

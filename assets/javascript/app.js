@@ -26,6 +26,7 @@ let questions = [
     }
 ];
 
+// initializes variables for use
 let correctGuess = 0;
 let wrongGuess = 0;
 let countdown = 10;
@@ -36,15 +37,16 @@ let timerCount;
 let answerPick = false;
 let score;
 
+// variables created to hold specific elements that are displayed on the page
 let $trueBtn = $("<button>true</button>").addClass("btn true-false");
 let $falseBtn = $("<button>false</button>").addClass("btn true-false");
-
 let $correct = $("<p>").addClass("correctAnswers");
 let $wrong = $("<p>").addClass("wrongAnswers");
 let $score = $("<p>").addClass("score");
 // let $img1 = $("<img src='./assets/images/bravo.gif'>").addClass("goodJob");
 // let $img2 = $("<img src='./assets/images/yousuck.gif'>").addClass("youSuck");
 
+// displays a new question every 10 seconds
 function getNextQuestion() {
 
     answerPick = true;
@@ -54,136 +56,60 @@ function getNextQuestion() {
         clearTimeout( handle );
         
     }
-    
-    handle = setTimeout( getNextQuestion, 10000 );
-    
-    $( "#quizQuestion" ).html( questions[questionIndex].q );
-    $( "#quizQuestion" ).append( $trueBtn );
-    $( "#quizQuestion" ).append( $falseBtn );
 
-    // if ( questionIndex > 4 ) {
-        //     console.log("stop");
-        //     clearTimeout( handle );
-        // }
-        
-        // timerCount = setTimeout(timer, 1000);
-    timer();
+    if ( questionIndex < 5 ) {
+    
+        handle = setTimeout( getNextQuestion, 10000 );
+
+        $( "#quizQuestion" ).html( questions[questionIndex].q );
+        $( "#quizQuestion" ).append( $trueBtn );
+        $( "#quizQuestion" ).append( $falseBtn );
+        timer();
+
+    } else {
+
+        scores();
+        clearTimeout ( timerCount );
+        $( "#timer" ).hide();
+
+    }
+    
+
+    
         
 }
 
-// function displayImage() {
-
-//     if ( imghandle ) {
-
-//         clearTimeout( imghandle );
-
-//     }
-  
-//     imghandle = setTimeout( getNextQuestion, 3000 );
-
-//     $("#quizQuestion").append($img1);
-
-
-
-// }
-
+// function that holds the timer for the game
 function timer() {
 
     countdown--;
     $( "#timer" ).html( `Time left : ${ countdown }` );
     
     if ( countdown === 0 ) {
+
+        if ( questionIndex < 5 ) {
         
-        parseInt( wrongGuess += 1 );
-        console.log("you ran out of time, you got: " + wrongGuess + "wrong");
-        questionIndex++;
-        countdown = 10;
-        getNextQuestion();
+            parseInt( wrongGuess += 1 );
+            questionIndex++;
+            countdown = 10;
+            getNextQuestion();
 
+        }
+
+        if ( timerCount ) {
+            
+            clearTimeout( timerCount );
+            
+        }
     }
 
-    if ( timerCount ) {
-
-        clearTimeout( timerCount );
-
-    }
-  
+    
     timerCount = setTimeout( timer, 1000 );
-
+    
 }
 
-// function timer() {
-
-//   countdown--;
-//   $("#timer").text(`Time Left: ${countdown}`);
-
-//   if (countdown === 0) {
-
-//       getNextQuestion();
-//     clearTimeout( handle );
-//     return false;
-
-//   }
-//   else {
-
-//     setTimeout(timer, 1000)
-
-//   }
-// }
-
-function reset() {
-
-    countdown = 10;
-    questionIndex = 0;
-    correctGuess = 0;
-    wrongGuess = 0;
-
-}
-
-// if ( questionIndex > 4 ) {
-//     $("#startBtn").show();
-//     clearTimeout( timerCount );
-// }
-
-// $("#resetBtn").hide();
-
-$(document).on("click", "#startBtn" , function(event) {
-    
-    getNextQuestion();
-    $("#startBtn").hide();
-    // $("#startBtn").show();
-    
-});
-
-$(document).on("click", "#resetBtn" , function(event) {
-    
-    reset();
-    getNextQuestion();
-    // $("#startBtn").hide();
-    
-});
-
-$(document).on("click", ".true-false" , function(event) {
-
-    // $(this).data('clicked', true);
-    
-    if ( this.textContent === questions[questionIndex].a ) {
-        parseInt( correctGuess += 1 );
-        console.log( "you got: " + correctGuess + "right" );
-        countdown = 10;
-        clearTimeout( timerCount );
-        setTimeout( getNextQuestion, 500 );
-        // displayImage();
-    } else {
-        parseInt( wrongGuess += 1 );
-        console.log( "you got: " + wrongGuess + "wrong" );
-        countdown = 10;
-        clearTimeout( timerCount );
-        setTimeout( getNextQuestion, 500 );
-        // displayImage();
-    }
-    questionIndex++;
-    // console.log(questionIndex);
+// displays the users final score once game ends
+function scores() {
 
     if ( questionIndex > 4 ) {
 
@@ -219,5 +145,56 @@ $(document).on("click", ".true-false" , function(event) {
         }
 
     }
+
+}
+
+// allows replayability upon clicking the 'Play Again' button without refreshing the page
+function reset() {
+
+    $( "#timer" ).show();
+    countdown = 10;
+    questionIndex = 0;
+    correctGuess = 0;
+    wrongGuess = 0;
+
+}
+
+// once clicked, the start button is hidden and the game starts
+$(document).on("click", "#startBtn" , function(event) {
+    
+    getNextQuestion();
+    $("#startBtn").hide();
+    
+});
+
+// on click, it resets the game to original state
+$(document).on("click", "#resetBtn" , function(event) {
+    
+    reset();
+    getNextQuestion();
+    
+});
+
+// determines if the correct answer was chosen and increments the appropriate counter
+// increases the index to display the new question
+// once the game is over, the amount of right/wrong choices + total score is displayed
+$(document).on("click", ".true-false" , function(event) {
+    
+    if ( this.textContent === questions[questionIndex].a ) {
+        parseInt( correctGuess += 1 );
+        console.log( "you got: " + correctGuess + "right" );
+        countdown = 10;
+        clearTimeout( timerCount );
+        setTimeout( getNextQuestion, 250 );
+    } else {
+        parseInt( wrongGuess += 1 );
+        console.log( "you got: " + wrongGuess + "wrong" );
+        countdown = 10;
+        clearTimeout( timerCount );
+        setTimeout( getNextQuestion, 250 );
+    }
+
+    questionIndex++;
+    scores();
     
 });
