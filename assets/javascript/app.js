@@ -43,11 +43,13 @@ let $falseBtn = $("<button>false</button>").addClass("btn true-false");
 let $correct = $("<p>").addClass("correctAnswers");
 let $wrong = $("<p>").addClass("wrongAnswers");
 let $score = $("<p>").addClass("score");
-// let $img1 = $("<img src='./assets/images/bravo.gif'>").addClass("goodJob");
-// let $img2 = $("<img src='./assets/images/yousuck.gif'>").addClass("youSuck");
+let $img1 = $("<img src='./assets/images/bravo.gif'>").addClass("goodJob");
+let $img2 = $("<img src='./assets/images/yousuck.gif'>").addClass("youSuck");
 
 // displays a new question every 10 seconds
 function getNextQuestion() {
+
+    $("#timer").show();
 
     answerPick = true;
     
@@ -73,9 +75,6 @@ function getNextQuestion() {
         $( "#timer" ).hide();
 
     }
-    
-
-    
         
 }
 
@@ -92,10 +91,12 @@ function timer() {
             parseInt( wrongGuess += 1 );
             questionIndex++;
             countdown = 10;
-            getNextQuestion();
-
+            
         }
 
+        // first time it runs, 'timercount' is 'undefined' or 'null'
+        // so it won't run the if statement
+        // once it exists, either !== null or !== undefined, it'll clearTimeout
         if ( timerCount ) {
             
             clearTimeout( timerCount );
@@ -103,13 +104,15 @@ function timer() {
         }
     }
 
-    
+    // "timerCount" now "exists"
     timerCount = setTimeout( timer, 1000 );
     
 }
 
 // displays the users final score once game ends
 function scores() {
+
+    $("#resetBtn").show();
 
     if ( questionIndex > 4 ) {
 
@@ -159,6 +162,8 @@ function reset() {
 
 }
 
+$("#resetBtn").hide();
+
 // once clicked, the start button is hidden and the game starts
 $(document).on("click", "#startBtn" , function(event) {
     
@@ -181,20 +186,49 @@ $(document).on("click", "#resetBtn" , function(event) {
 $(document).on("click", ".true-false" , function(event) {
     
     if ( this.textContent === questions[questionIndex].a ) {
+
         parseInt( correctGuess += 1 );
         console.log( "you got: " + correctGuess + "right" );
         countdown = 10;
         clearTimeout( timerCount );
-        setTimeout( getNextQuestion, 250 );
+        
+        // This section shows an image for 5
+        $("#timer").hide();
+        $("#quizQuestion").html('');
+        $("#quizQuestion").append($img1);
+
+        // wrap this function in a setTimeout to execute after 5 seconds
+        let myFunction = function() {
+
+            $img1.remove();
+            getNextQuestion();
+
+        };
+        setTimeout(myFunction, 2000);
+
     } else {
         parseInt( wrongGuess += 1 );
         console.log( "you got: " + wrongGuess + "wrong" );
         countdown = 10;
         clearTimeout( timerCount );
-        setTimeout( getNextQuestion, 250 );
+
+        // This section shows an image for 5
+        $("#timer").hide();
+        $("#quizQuestion").html('');
+        $("#quizQuestion").append($img2);
+
+        // wrap this function in a setTimeout to execute after 5 seconds
+        let myFunction = function() {
+
+            $img1.remove();
+            getNextQuestion();
+
+        };
+        setTimeout(myFunction, 2000);
+
     }
 
     questionIndex++;
     scores();
-    
+
 });
