@@ -91,6 +91,7 @@ function timer() {
             parseInt( wrongGuess += 1 );
             questionIndex++;
             countdown = 10;
+            clearTimeout(myFunction);
             
         }
 
